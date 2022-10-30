@@ -27,12 +27,14 @@ class Scene1 {
 
 // Create config settings for the game
 let config = {
-    width: 0,
-    height: 0,
+    width: 700,
+    height: 500,
+    backgroundColor: 0x000000, // Black
     scene: Scene1,
     physics: {
         default: "arcade"
-    }
+    },
+    parent: "game"
 }
 
 // Create the game using our config
