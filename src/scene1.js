@@ -24,3 +24,16 @@ class Scene1 {
 
     }
 }
+
+// Create config settings for the game
+let config = {
+    width: 0,
+    height: 0,
+    scene: Scene1,
+    physics: {
+        default: "arcade"
+    }
+}
+
+// Create the game using our config
+let game = new Phaser.Game(config);
