@@ -1,8 +1,11 @@
 /**
  * Scene1 - Handles the logic for the game.
  */
-class Scene1 {
+class Scene1  extends Phaser.Scene {
     constructor() {
+
+        super({ key: 'Scene1' });
+
         // Snake alive state is set to true
         this.alive = true;
 
@@ -11,6 +14,7 @@ class Scene1 {
 
         // Set score of the game
         this.score = 0;
+
     }
     /**
      * preload() - Loads all assets needed for the game.
@@ -37,6 +41,13 @@ class Scene1 {
     create() {
         // Place the snake at the bottom center of the screen
         let snakeBody = this.snakeBody = this.physics.add.sprite(config.width / 2, config.height - 64, "snakeBody");
+
+        // Set up event for if the snake collides with the world bounds.
+        snakeBody.body.onWorldBounds = true
+        this.physics.world.on('worldbounds', () => {
+            this.scene.start("GameOver", {"finalScore": this.score})
+        });
+
 
         // Place the food at the center of the screen
         let snakeFood = this.snakeFood = this.physics.add.sprite(config.width / 2, config.height / 2, "snakeFood");
@@ -111,4 +122,6 @@ class Scene1 {
             this.snakeDirection = "DOWN";
         }
     }
+
+    
 }

@@ -3,7 +3,7 @@ let config = {
     width: 700,
     height: 500,
     backgroundColor: 0x000000, // Black
-    scene: Scene1,
+    scene: [Scene1, GameOver],
     physics: {
         default: "arcade"
     },
