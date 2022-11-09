@@ -17,6 +17,7 @@ class Scene1 {
      */
     preload() {
         // Load the background
+        this.load.image("background", "assets/Background.png");
 
         // Load the snake
         this.load.spritesheet("snakeBody", "assets/snake.jpg", {
@@ -25,7 +26,7 @@ class Scene1 {
         });
 
         // Load the food
-        this.load.spritesheet("snakeFood", "assets/food.jpg", {
+        this.load.spritesheet("snakeFood", "assets/Apple.png", {
             frameWidth: 16,
             frameHeight: 16
         });
@@ -35,6 +36,10 @@ class Scene1 {
      * create() - Gets called after preload(). This method initializes the scene.
      */
     create() {
+        // Place the background
+        this.background = this.add.tileSprite(0, 0, config.width, config.height, "background");
+        this.background.setOrigin(0,0);
+        
         // Place the snake at the bottom center of the screen
         let snakeBody = this.snakeBody = this.physics.add.sprite(config.width / 2, config.height - 64, "snakeBody");
 
