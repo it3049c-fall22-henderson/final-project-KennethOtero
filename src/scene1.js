@@ -66,19 +66,8 @@ class Scene1 {
             this.hit();
         }
 
-        // Get the snake's current direction from the user
+        // Get the snake's current direction from the user and move it
         this.moveSnake();
-
-        // Move the snake based on user input
-        if (this.snakeDirection === "LEFT") {
-            this.snakeBody.x--;
-        } else if (this.snakeDirection === "RIGHT") {
-            this.snakeBody.x++;
-        } else if (this.snakeDirection === "UP") {
-            this.snakeBody.y--;
-        } else if (this.snakeDirection === "DOWN") {
-            this.snakeBody.y++;
-        }
     }
 
     /**
@@ -101,14 +90,30 @@ class Scene1 {
      */
     moveSnake() {
         // Update the snake's current direction based on the user's input
-        if (this.arrow.left.isDown && this.snakeDirection !== "LEFT" && this.snakeDirection !== "RIGHT") {
+        if (this.arrow.left.isDown && this.snakeDirection !== "RIGHT") {
             this.snakeDirection = "LEFT";
-        } else if (this.arrow.right.isDown && this.snakeDirection !== "LEFT" && this.snakeDirection !== "RIGHT") {
+        } else if (this.arrow.right.isDown && this.snakeDirection !== "LEFT") {
             this.snakeDirection = "RIGHT";
-        } else if (this.arrow.up.isDown && this.snakeDirection !== "UP" && this.snakeDirection !== "DOWN") {
+        } else if (this.arrow.up.isDown && this.snakeDirection !== "DOWN") {
             this.snakeDirection = "UP";
-        } else if (this.arrow.down.isDown && this.snakeDirection !== "UP" && this.snakeDirection !== "DOWN") {
+        } else if (this.arrow.down.isDown && this.snakeDirection !== "UP") {
             this.snakeDirection = "DOWN";
+        }
+
+        // Move the snake depending on the user's chosen direction
+        switch (this.snakeDirection) {
+            case "LEFT":
+                this.snakeBody.x--;
+                break;
+            case "RIGHT":
+                this.snakeBody.x++;
+                break;
+            case "UP":
+                this.snakeBody.y--;
+                break;
+            case "DOWN":
+                this.snakeBody.y++;
+                break;
         }
     }
 }

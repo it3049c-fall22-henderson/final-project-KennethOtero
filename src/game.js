@@ -11,4 +11,4 @@ let config = {
 }
 
 // Create the game using our config
-let game = new Phaser.Game(config);
+// let game = new Phaser.Game(config);
