@@ -11,13 +11,10 @@ let config = {
 }
 
 // Leaderboard to contain users and their scores
-// Use Object.assign to add new players
-// (e.g., Object.assign(snakeLeaderboard, {player2: {name: "James", score: 0}});
+// Use Object.assign to add new players: key = name, value = score
+// (e.g., Object.assign(snakeLeaderboard, {Ken: 0});
 let snakeLeaderboard = {
-    player1: {
-        name: "Ken",
-        score: 0
-    }
+    Ken: 0
 }
 
 // Create the game using our config
