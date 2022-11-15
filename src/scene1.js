@@ -25,6 +25,7 @@ class Scene1  extends Phaser.Scene {
      */
     preload() {
         // Load the background
+        this.load.image("background", "assets/Background.png");
 
         // Load the snake
         this.load.spritesheet("snakeBody", "assets/snake.jpg", {
@@ -33,7 +34,7 @@ class Scene1  extends Phaser.Scene {
         });
 
         // Load the food
-        this.load.spritesheet("snakeFood", "assets/food.jpg", {
+        this.load.spritesheet("snakeFood", "assets/Apple.png", {
             frameWidth: 16,
             frameHeight: 16
         });
@@ -43,6 +44,10 @@ class Scene1  extends Phaser.Scene {
      * create() - Gets called after preload(). This method initializes the scene.
      */
     create() {
+        // Place the background
+        this.background = this.add.tileSprite(0, 0, config.width, config.height, "background");
+        this.background.setOrigin(0,0);
+        
 
         this.snakeGroup = this.physics.add.group();
         this.firstNodePosition = new Phaser.Geom.Point(this.SNAKEX, this.SNAKEY);
@@ -58,7 +63,6 @@ class Scene1  extends Phaser.Scene {
         this.physics.world.on('worldbounds', () => {
             this.gameOver()
         });
-
 
         // Place the food at the center of the screen
         let snakeFood = this.snakeFood = this.physics.add.sprite(config.width / 2, config.height / 2, "snakeFood");

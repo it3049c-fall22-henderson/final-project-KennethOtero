@@ -10,5 +10,12 @@ let config = {
     parent: "game"
 }
 
+// Leaderboard to contain users and their scores
+// Use Object.assign to add new players: key = name, value = score
+// (e.g., Object.assign(snakeLeaderboard, {Ken: 0});
+let snakeLeaderboard = {
+    Ken: 0
+}
+
 // Create the game using our config
-let game = new Phaser.Game(config);
+// let game = new Phaser.Game(config);

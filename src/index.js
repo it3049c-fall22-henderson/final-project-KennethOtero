@@ -33,6 +33,9 @@ function validateForm() {
 
     // Show the game
     document.getElementById('game').style.display = "block";
+
+    // Start the game using our config settings
+    new Phaser.Game(config);
     
     // Return successful form validation
     return true;
