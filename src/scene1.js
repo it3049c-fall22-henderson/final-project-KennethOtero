@@ -17,6 +17,7 @@ class Scene1 {
      */
     preload() {
         // Load the background
+        this.load.image("background", "assets/Background.png");
 
         // Load the snake
         this.load.spritesheet("snakeBody", "assets/snake.jpg", {
@@ -25,7 +26,7 @@ class Scene1 {
         });
 
         // Load the food
-        this.load.spritesheet("snakeFood", "assets/food.jpg", {
+        this.load.spritesheet("snakeFood", "assets/Apple.png", {
             frameWidth: 16,
             frameHeight: 16
         });
@@ -35,6 +36,10 @@ class Scene1 {
      * create() - Gets called after preload(). This method initializes the scene.
      */
     create() {
+        // Place the background
+        this.background = this.add.tileSprite(0, 0, config.width, config.height, "background");
+        this.background.setOrigin(0,0);
+        
         // Place the snake at the bottom center of the screen
         let snakeBody = this.snakeBody = this.physics.add.sprite(config.width / 2, config.height - 64, "snakeBody");
 
@@ -66,19 +71,8 @@ class Scene1 {
             this.hit();
         }
 
-        // Get the snake's current direction from the user
+        // Get the snake's current direction from the user and move it
         this.moveSnake();
-
-        // Move the snake based on user input
-        if (this.snakeDirection === "LEFT") {
-            this.snakeBody.x--;
-        } else if (this.snakeDirection === "RIGHT") {
-            this.snakeBody.x++;
-        } else if (this.snakeDirection === "UP") {
-            this.snakeBody.y--;
-        } else if (this.snakeDirection === "DOWN") {
-            this.snakeBody.y++;
-        }
     }
 
     /**
@@ -101,14 +95,30 @@ class Scene1 {
      */
     moveSnake() {
         // Update the snake's current direction based on the user's input
-        if (this.arrow.left.isDown && this.snakeDirection !== "LEFT" && this.snakeDirection !== "RIGHT") {
+        if (this.arrow.left.isDown && this.snakeDirection !== "RIGHT") {
             this.snakeDirection = "LEFT";
-        } else if (this.arrow.right.isDown && this.snakeDirection !== "LEFT" && this.snakeDirection !== "RIGHT") {
+        } else if (this.arrow.right.isDown && this.snakeDirection !== "LEFT") {
             this.snakeDirection = "RIGHT";
-        } else if (this.arrow.up.isDown && this.snakeDirection !== "UP" && this.snakeDirection !== "DOWN") {
+        } else if (this.arrow.up.isDown && this.snakeDirection !== "DOWN") {
             this.snakeDirection = "UP";
-        } else if (this.arrow.down.isDown && this.snakeDirection !== "UP" && this.snakeDirection !== "DOWN") {
+        } else if (this.arrow.down.isDown && this.snakeDirection !== "UP") {
             this.snakeDirection = "DOWN";
+        }
+
+        // Move the snake depending on the user's chosen direction
+        switch (this.snakeDirection) {
+            case "LEFT":
+                this.snakeBody.x--;
+                break;
+            case "RIGHT":
+                this.snakeBody.x++;
+                break;
+            case "UP":
+                this.snakeBody.y--;
+                break;
+            case "DOWN":
+                this.snakeBody.y++;
+                break;
         }
     }
 }
