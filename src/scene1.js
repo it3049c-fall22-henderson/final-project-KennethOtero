@@ -1,8 +1,11 @@
 /**
  * Scene1 - Handles the logic for the game.
  */
-class Scene1 {
+class Scene1  extends Phaser.Scene {
     constructor() {
+
+        super({ key: 'Scene1' });
+
         // Snake alive state is set to true
         this.alive = true;
 
@@ -11,6 +14,11 @@ class Scene1 {
 
         // Set score of the game
         this.score = 0;
+
+        this.SNAKEX = 21
+        this.SNAKEY = 21    
+
+
     }
     /**
      * preload() - Loads all assets needed for the game.
@@ -40,19 +48,31 @@ class Scene1 {
         this.background = this.add.tileSprite(0, 0, config.width, config.height, "background");
         this.background.setOrigin(0,0);
         
-        // Place the snake at the bottom center of the screen
-        let snakeBody = this.snakeBody = this.physics.add.sprite(config.width / 2, config.height - 64, "snakeBody");
+
+        this.snakeGroup = this.physics.add.group();
+        this.firstNodePosition = new Phaser.Geom.Point(this.SNAKEX, this.SNAKEY);
+        this.firstNode = this.snakeGroup.create(this.SNAKEX * 16, this.SNAKEY * 16, 'snakeBody');
+        this.firstNode.setOrigin(0)
+        this.trailingNodes = new Phaser.Geom.Point(this.SNAKEX, this.SNAKEY)
+        this.speed = 75
+        this.moveDelay = 0
+
+        // Set up event for if the snake collides with the world bounds.
+        this.firstNode.body.setCollideWorldBounds(true);
+        this.firstNode.body.onWorldBounds = true
+        this.physics.world.on('worldbounds', () => {
+            this.gameOver()
+        });
 
         // Place the food at the center of the screen
         let snakeFood = this.snakeFood = this.physics.add.sprite(config.width / 2, config.height / 2, "snakeFood");
 
         // Set collision on worldbounds so that the player/food does not exit the screen
-        snakeBody.setCollideWorldBounds(true);
         snakeFood.setCollideWorldBounds(true);
 
         // Set score for the player and display it in the corner
         let style = { font: "20px Arial", fill: "#fff" };
-        this.scoreText = this.add.text(10, 10, "SCORE: " + this.score, style);
+        this.scoreText = this.add.text(8, 8, "SCORE: " + this.score, style);
 
         // Create cursor keypresses
         this.arrow = this.input.keyboard.createCursorKeys();
@@ -62,17 +82,28 @@ class Scene1 {
      * update() - Gets called after create(). This method gets called 60 times
      * per second and contains game logic.
      */
-    update() {
-        // Exit if the snake is not alive
-        if (!this.alive) return; 
+    update(timeElasped) {
 
-        // Check if the snake has hit the food
-        if (this.physics.overlap(this.snakeBody, this.snakeFood)) {
-            this.hit();
+          // Update the snake's current direction based on the user's input
+          if (this.arrow.left.isDown && this.snakeDirection !== "LEFT" && this.snakeDirection !== "RIGHT") {
+            this.snakeDirection = "LEFT";
+        } else if (this.arrow.right.isDown && this.snakeDirection !== "LEFT" && this.snakeDirection !== "RIGHT") {
+            this.snakeDirection = "RIGHT";
+        } else if (this.arrow.up.isDown && this.snakeDirection !== "UP" && this.snakeDirection !== "DOWN") {
+            this.snakeDirection = "UP";
+        } else if (this.arrow.down.isDown && this.snakeDirection !== "UP" && this.snakeDirection !== "DOWN") {
+            this.snakeDirection = "DOWN";
         }
 
-        // Get the snake's current direction from the user and move it
-        this.moveSnake();
+        //Without this the snake moves too fast
+        if(timeElasped >= this.moveDelay){
+             this.moveSnake(timeElasped);
+        }
+
+         // Check if the snake has hit the food
+         if (this.physics.overlap(this.snakeGroup, this.snakeFood)) {
+            this.hit();
+        }
     }
 
     /**
@@ -86,6 +117,11 @@ class Scene1 {
         // Increment the score and update it on the screen
         this.score++;
         this.scoreText.setText("SCORE: " + this.score);
+
+        var sectionToAdd = this.snakeGroup.create(this.trailingNodes.x, this.trailingNodes.y, 'snakeBody');
+        sectionToAdd.setOrigin(0);
+
+
     }
 
     /**
@@ -93,32 +129,41 @@ class Scene1 {
      * the snake cannot move in the opposite direction that it's traveling in, (e.g., moving left when
      * the snake is going right) to prevent it from colliding with itself.
      */
-    moveSnake() {
-        // Update the snake's current direction based on the user's input
-        if (this.arrow.left.isDown && this.snakeDirection !== "RIGHT") {
-            this.snakeDirection = "LEFT";
-        } else if (this.arrow.right.isDown && this.snakeDirection !== "LEFT") {
-            this.snakeDirection = "RIGHT";
-        } else if (this.arrow.up.isDown && this.snakeDirection !== "DOWN") {
-            this.snakeDirection = "UP";
-        } else if (this.arrow.down.isDown && this.snakeDirection !== "UP") {
-            this.snakeDirection = "DOWN";
+    moveSnake(timeElasped) {
+
+         // Move the snake based on user input
+         if (this.snakeDirection === "LEFT") {
+            this.firstNodePosition.x--;
+        } else if (this.snakeDirection === "RIGHT") {
+            this.firstNodePosition.x++;
+        } else if (this.snakeDirection === "UP") {
+            this.firstNodePosition.y--;
+        } else if (this.snakeDirection === "DOWN") {
+            this.firstNodePosition.y++;
         }
 
-        // Move the snake depending on the user's chosen direction
-        switch (this.snakeDirection) {
-            case "LEFT":
-                this.snakeBody.x--;
-                break;
-            case "RIGHT":
-                this.snakeBody.x++;
-                break;
-            case "UP":
-                this.snakeBody.y--;
-                break;
-            case "DOWN":
-                this.snakeBody.y++;
-                break;
+        Phaser.Actions.ShiftPosition(this.snakeGroup.getChildren(), this.firstNodePosition.x * 16, this.firstNodePosition.y * 16, 1, this.trailingNodes);
+
+        this.moveDelay = timeElasped + this.speed;
+
+        //This checks for snake collisions with itself
+        // The 2nd argument is the compare object. In other words, this will return a match if the x position and y position of any snake nodes equals the x or y position of the first node, the head.
+        // 1 is the offset. If we don't have that, we'd be checking if the position of the first node equaled the position of the first node
+        if(Phaser.Actions.GetFirst(this.snakeGroup.getChildren(), { x: this.firstNode.x, y: this.firstNode.y }, 1)){
+            this.gameOver()
         }
+
+
     }
+
+    /***
+     * Navigates to the game over screen. A game should be over if the head of the snake exists the world, or collides with its body.
+     */
+    gameOver(){
+
+        this.scene.start("GameOver", {"finalScore": this.score})
+
+    }
+
+    
 }
