@@ -26,11 +26,13 @@ create(){
 
 
 }
+replay(){
+    document.getElementByIdById('endScreen').style.display='none';
+}
 
-update(){
+update() {
 
 }
 
-
-
 }
+
