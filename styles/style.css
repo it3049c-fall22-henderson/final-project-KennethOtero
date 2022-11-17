@@ -72,3 +72,20 @@ html, body {
     border: 2px solid silver;
     display: none;
 }
+
+#endScreen{
+    position: absolute;
+    z-index: 101;
+    width: 500px;
+    height: 400px;
+    background-color:#555555;
+}
+
+#endScreenContent{
+    width: 100%;
+    height:fit-content;
+    padding: 10px 15px;
+    background-color: #555555;
+    margin: auto;
+    text-align: center;
+}
