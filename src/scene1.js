@@ -12,6 +12,9 @@ class Scene1  extends Phaser.Scene {
         // Set the snake's directions
         this.snakeDirection = "";
 
+        //current direction angle
+        this.currentAngle = 0;
+
         // Set score of the game
         this.score = 0;
 
@@ -27,8 +30,28 @@ class Scene1  extends Phaser.Scene {
         // Load the background
         this.load.image("background", "assets/Background.png");
 
-        // Load the snake
-        this.load.spritesheet("snakeBody", "assets/snake.jpg", {
+        //Load the snake pieces
+        this.load.spritesheet("snakeHead", "assets/snakeHead.png", {
+            frameWidth: 16,
+            frameHeight: 16
+        });
+
+        this.load.spritesheet("snakeBody", "assets/snakeBody.png", {
+            frameWidth: 16,
+            frameHeight: 16
+        });
+
+        this.load.spritesheet("snakeTurn", "assets/snakeTurn.png", {
+            frameWidth: 16,
+            frameHeight: 16
+        });
+
+        this.load.spritesheet("snakeTail", "assets/snakeTail.png", {
+            frameWidth: 16,
+            frameHeight: 16
+        });
+
+        this.load.spritesheet("snakeTurn_clockwise", "assets/snakeTurn_clock.png", {
             frameWidth: 16,
             frameHeight: 16
         });
@@ -51,9 +74,16 @@ class Scene1  extends Phaser.Scene {
 
         this.snakeGroup = this.physics.add.group();
         this.firstNodePosition = new Phaser.Geom.Point(this.SNAKEX, this.SNAKEY);
-        this.firstNode = this.snakeGroup.create(this.SNAKEX * 16, this.SNAKEY * 16, 'snakeBody');
-        this.firstNode.setOrigin(0)
+        this.firstNode = this.snakeGroup.create(this.SNAKEX * 16, this.SNAKEY * 16, 'snakeHead');
+        this.firstNode.setOrigin(0.5)
+
+        this.tail = this.snakeGroup.create((this.SNAKEX * 16 + 16), this.SNAKEY * 16, 'snakeTail');
+        this.tail.setOrigin(0.5)
+
         this.trailingNodes = new Phaser.Geom.Point(this.SNAKEX, this.SNAKEY)
+
+
+
         this.speed = 75
         this.moveDelay = 0
 
@@ -84,25 +114,32 @@ class Scene1  extends Phaser.Scene {
      */
     update(timeElasped) {
 
-          // Update the snake's current direction based on the user's input
-          if (this.arrow.left.isDown && this.snakeDirection !== "LEFT" && this.snakeDirection !== "RIGHT") {
+        // Update the snake's current direction based on the user's input
+        if (this.arrow.left.isDown && this.snakeDirection !== "LEFT" && this.snakeDirection !== "RIGHT") {
             this.snakeDirection = "LEFT";
+            this.currentAngle = 0;
         } else if (this.arrow.right.isDown && this.snakeDirection !== "LEFT" && this.snakeDirection !== "RIGHT") {
             this.snakeDirection = "RIGHT";
+            this.currentAngle = -180;
         } else if (this.arrow.up.isDown && this.snakeDirection !== "UP" && this.snakeDirection !== "DOWN") {
             this.snakeDirection = "UP";
+            this.currentAngle = 90;
         } else if (this.arrow.down.isDown && this.snakeDirection !== "UP" && this.snakeDirection !== "DOWN") {
             this.snakeDirection = "DOWN";
+            this.currentAngle = -90;
         }
 
-        //Without this the snake moves too fast
-        if(timeElasped >= this.moveDelay){
-             this.moveSnake(timeElasped);
-        }
+        //Only start to move or check for hits after the player has started movement
+        if (this.snakeDirection !== ""){
+            //Without this the snake moves too fast
+            if(timeElasped >= this.moveDelay){
+                this.moveSnake(timeElasped);
+            }
 
-         // Check if the snake has hit the food
-         if (this.physics.overlap(this.snakeGroup, this.snakeFood)) {
-            this.hit();
+            // Check if the snake has hit the food
+            if (this.physics.overlap(this.snakeGroup, this.snakeFood)) {
+                this.hit();
+            }
         }
     }
 
@@ -118,10 +155,15 @@ class Scene1  extends Phaser.Scene {
         this.score++;
         this.scoreText.setText("SCORE: " + this.score);
 
-        var sectionToAdd = this.snakeGroup.create(this.trailingNodes.x, this.trailingNodes.y, 'snakeBody');
-        sectionToAdd.setOrigin(0);
-
-
+        //get previous ending angle
+        var addAngle = this.snakeGroup.getLast(true).angle;
+        //set previous tail to a body part
+        this.snakeGroup.getLast(true).setTexture("snakeBody");
+        //add the new tail
+        var sectionToAdd = this.snakeGroup.create(this.trailingNodes.x, this.trailingNodes.y, 'snakeTail');
+        sectionToAdd.setOrigin(0.5,0.5);
+        //set new tail to same angle as old tail
+        sectionToAdd.angle = addAngle;
     }
 
     /**
@@ -132,7 +174,7 @@ class Scene1  extends Phaser.Scene {
     moveSnake(timeElasped) {
 
          // Move the snake based on user input
-         if (this.snakeDirection === "LEFT") {
+        if (this.snakeDirection === "LEFT") {
             this.firstNodePosition.x--;
         } else if (this.snakeDirection === "RIGHT") {
             this.firstNodePosition.x++;
@@ -143,6 +185,7 @@ class Scene1  extends Phaser.Scene {
         }
 
         Phaser.Actions.ShiftPosition(this.snakeGroup.getChildren(), this.firstNodePosition.x * 16, this.firstNodePosition.y * 16, 1, this.trailingNodes);
+        this.updateSnake(true);
 
         this.moveDelay = timeElasped + this.speed;
 
@@ -156,13 +199,49 @@ class Scene1  extends Phaser.Scene {
 
     }
 
+    //Used to update the snake
+    updateSnake(){
+        var first = true;
+        var prevA = this.currentAngle;
+        var p = 0; // placeholder variable for switching prevA and part.angle
+        this.snakeGroup.getChildren().forEach(function (part){
+            //changes head direction
+            if (first){
+                part.angle = prevA;
+                first = false;
+            //changes body direction
+            }else {
+                //turns
+                if (prevA != part.angle){
+                    if ((prevA < part.angle && !(part.angle ===90 && prevA === -180)) || (part.angle === -180 && prevA === 90)){ // moving counter clockwise
+                        part.setTexture("snakeTurn");
+                    } else { // moving clockwise
+                        part.setTexture("snakeTurn_clockwise");
+                    }  
+                    p = part.angle;
+                    part.angle = prevA;
+                    prevA = p;
+                //moving straight
+                } else{
+                    part.setTexture("snakeBody");
+                    p = part.angle;
+                    part.angle = prevA;
+                    prevA = p;
+                }
+            }
+
+        });
+        //adds tail to last piece
+        this.snakeGroup.getLast(true).setTexture("snakeTail");
+    }
+
     /***
      * Navigates to the game over screen. A game should be over if the head of the snake exists the world, or collides with its body.
      */
     gameOver(){
 
         this.scene.start("GameOver", {"finalScore": this.score})
-
+        
     }
 
     
