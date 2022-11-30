@@ -1,0 +1,75 @@
+{
+	"frames": {
+		"blackSmoke00.png": {
+			"frame": {
+				"x": 0,
+				"y": 0,
+				"w": 362,
+				"h": 336
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 362,
+				"h": 336
+			},
+			"sourceSize": {
+				"w": 362,
+				"h": 336
+			}
+		},
+		"blackSmoke01.png": {
+			"frame": {
+				"x": 362,
+				"y": 0,
+				"w": 398,
+				"h": 364
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 398,
+				"h": 364
+			},
+			"sourceSize": {
+				"w": 398,
+				"h": 364
+			}
+		},
+		"blackSmoke02.png": {
+			"frame": {
+				"x": 0,
+				"y": 364,
+				"w": 386,
+				"h": 342
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 386,
+				"h": 342
+			},
+			"sourceSize": {
+				"w": 386,
+				"h": 342
+			}
+		}
+	},
+	"meta": {
+		"app": "http://www.codeandweb.com/texturepacker",
+		"version": "1.0",
+		"image": "spritesheet.png",
+		"format": "RGBA8888",
+		"size": {
+			"w": 760,
+			"h": 706
+		},
+		"scale": "1"
+	}
+}

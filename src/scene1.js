@@ -61,12 +61,20 @@ class Scene1  extends Phaser.Scene {
             frameWidth: 16,
             frameHeight: 16
         });
+
+        this.load.atlas('boar', 'assets/enemies/boar.png', 'assets/enemies/boar.json',  )
+        this.load.atlas('bee', 'assets/enemies/bee.png', 'assets/enemies/bee.json',  )
+        this.load.atlas('smoke', 'assets/enemies/smoke.png', 'assets/enemies/smoke.json',  )
+
+
     }
 
     /**
      * create() - Gets called after preload(). This method initializes the scene.
      */
     create() {
+
+        this.isGameOver = false
         // Place the background
         this.background = this.add.tileSprite(0, 0, config.width, config.height, "background");
         this.background.setOrigin(0,0);
@@ -106,6 +114,35 @@ class Scene1  extends Phaser.Scene {
 
         // Create cursor keypresses
         this.arrow = this.input.keyboard.createCursorKeys();
+
+
+        this.delay = 4000
+
+        this.time.addEvent({ delay: this.delay, callback: this.spawnEnemy, callbackScope: this, loop: true });
+
+
+        this.particles = this.add.particles('smoke');
+
+        
+        this.emitter = this.particles.createEmitter({
+            frame: [ 'blackSmoke00.png', 'blackSmoke01.png', 'blackSmoke02.png','blackSmoke03.png', ],
+            angle: { min: 240, max: 300 },
+            speed: { min: 200, max: 300 },
+            quantity: 10,
+            lifespan: 500,
+            alpha: { start: 1, end: 0 },
+            scale: {  min: 0.1, max: 0.5 },
+            on: false
+        });
+
+        this.emitter.onParticleDeath((particle) => {
+
+            this.gameOver()
+
+        }, this);
+    
+
+
     }
 
     /**
@@ -113,6 +150,9 @@ class Scene1  extends Phaser.Scene {
      * per second and contains game logic.
      */
     update(timeElasped) {
+
+        if(this.isGameOver == false){
+
 
         // Update the snake's current direction based on the user's input
         if (this.arrow.left.isDown && this.snakeDirection !== "LEFT" && this.snakeDirection !== "RIGHT") {
@@ -142,11 +182,67 @@ class Scene1  extends Phaser.Scene {
             }
         }
     }
+    }
+
+    spawnEnemy(){
+
+        let num = (Math.random()>0.5)? 1 : 0
+
+
+        let enemyName = ""
+        let enemyPrefix = ""
+
+        
+        if(num == 0){
+            enemyName = "boar"
+            enemyPrefix = "Run_"
+        }else if(num == 1){
+            enemyName = "bee"
+            enemyPrefix = "Fly_"
+        }
+        
+        let key = Date.now().toString()
+
+        this.anims.create({
+            key: key,
+            frames: this.anims.generateFrameNames(enemyName, {prefix: enemyPrefix, end: 3}),
+            frameRate: 8,
+            repeat: 16,
+            yoyo: false,
+        })
+
+
+       let enemy =  this.physics.add.sprite(-20, Phaser.Math.Between(0, this.game.config.height), enemyName).play(key).setScale(0.08)
+     
+       enemy.on('animationcomplete', function(){
+        enemy.destroy()
+    });
+
+       var collider = this.physics.add.collider(enemy, this.snakeGroup.getChildren(),  null, function (_enemy, _player)
+       {
+            this.isGameOver = true
+
+            
+            _enemy.destroy()
+        
+            this.particles.emitParticleAt(_player.x, _player.y);
+            this.physics.world.removeCollider(collider);
+        
+       }, this);
+
+     enemy.setVelocityX(Math.floor(Math.random() * (170 - 100 + 1) + 100), 10);
+
+  
+
+    }
+
+    
 
     /**
      * hit() - Score when the snake collides with its food.
      */
     hit() {
+
         // Change the position of the food to a random location
         this.snakeFood.x = Phaser.Math.Between(100, 600);
         this.snakeFood.y = Phaser.Math.Between(100, 300);
@@ -164,6 +260,8 @@ class Scene1  extends Phaser.Scene {
         sectionToAdd.setOrigin(0.5,0.5);
         //set new tail to same angle as old tail
         sectionToAdd.angle = addAngle;
+
+
     }
 
     /**
@@ -172,6 +270,8 @@ class Scene1  extends Phaser.Scene {
      * the snake is going right) to prevent it from colliding with itself.
      */
     moveSnake(timeElasped) {
+
+        if(!this.isGameOver){
 
          // Move the snake based on user input
         if (this.snakeDirection === "LEFT") {
@@ -196,6 +296,7 @@ class Scene1  extends Phaser.Scene {
             this.gameOver()
         }
 
+    }
 
     }
 
