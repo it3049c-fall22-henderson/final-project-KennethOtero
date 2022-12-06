@@ -28,13 +28,6 @@ function get_scores (callback) {
             callback(scores);
         });
     });
-    //If theres an error, then...
-
-    .catch(function (err) {
-        Errors.innerHTML = err;
-    }
-  };
-
 
 //High Score list to be displayed
 
@@ -107,4 +100,4 @@ var list_scores = function (scores) {
     })
   });
 
-
+}
