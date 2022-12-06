@@ -76,6 +76,10 @@ class Scene1  extends Phaser.Scene {
             frameWidth: 16,
             frameHeight: 16
         });  
+
+        this.load.atlas('rain', 'assets/rain.png', 'assets/rain.json');
+        this.load.atlas('snow', 'assets/snowflake.png', 'assets/snowflake.json');
+
     
     }
 
@@ -125,6 +129,60 @@ class Scene1  extends Phaser.Scene {
 
         // Create cursor keypresses
         this.arrow = this.input.keyboard.createCursorKeys();
+
+        //Generate a weather event every 20 seconds
+        this.time.addEvent({ delay: 15000, callback: this.generateWeatherEvent, callbackScope: this, loop: true });
+
+
+    }
+
+    generateWeatherEvent(){
+
+        if(this.emitter && this.emitter.on){
+            this.emitter.stop()
+        }else{
+
+            let randomNum = (Math.random()>=0.5)? 1 : 0;
+
+            if(randomNum == 0){
+
+                let particles = this.add.particles('snow');
+
+                this.emitter =  particles.createEmitter({
+                    frame: 'snowflake',
+                    y: 0,
+                    x: { min: 0, max: 700 },
+                    lifespan: 2000,
+                    speedY: { min: 100, max: 300 },
+                    scale:{start: 0.02, end: 0},
+                    quantity: 1,
+                    blendMode: 'NORMAL',
+                    frequency: 50
+            
+                });
+            }else if(randomNum == 1){
+
+                let particles = this.add.particles('rain');
+
+
+                this.emitter =  particles.createEmitter({
+                frame: 'rain',
+                y: 0,
+                x: { min: 0, max: 700 },
+                lifespan: 2000,
+                speedY: { min: 300, max: 700 },
+                scale:{start: 0.02, end: 0},
+                quantity: 2,
+                frequency: 20,
+                blendMode: 'NORMAL'
+             });
+
+            }
+
+        }
+     
+
+
     }
 
     /**
@@ -166,6 +224,8 @@ class Scene1  extends Phaser.Scene {
      * hit() - Score when the snake collides with its food.
      */
     hit() {
+
+        this.speed -= 1
 
         // Increment the score and update it on the screen
         this.score += this.currentFoodPointValue
