@@ -19,9 +19,6 @@ class GameOver extends Phaser.Scene {
         //Creating and centering the game over message.
         this.gameOverMessageText = this.add.text(config.width / 2, config.height / 2 - 100, "Game Over\nScore: " + this.finalScore, gameOverStyle).setOrigin(0.5);
 
-        // Show high score (pull high score from local storage)
-        this.highScoreText = this.add.text(config.width / 2, config.height / 2, "High Score: ", {font: "40px Arial", fill: '#FFFF00'}).setOrigin(0.5);
-
         // Add restart scene text
         const restartButton = this.add.text(config.width / 2, config.height / 2 + 100, 'Restart Game', { font: "40px Arial", fill: '#00FF00' }).setOrigin(0.5);
 
@@ -37,6 +34,19 @@ class GameOver extends Phaser.Scene {
             // Restart scene
             this.scene.start('Scene1');
         });
+
+        let highScore = localStorage.getItem("highScore")
+
+        if((highScore && parseInt(this.finalScore) > parseInt(highScore)) || !highScore){
+            this.highScore = this.finalScore
+            localStorage.setItem("highScore", this.finalScore)
+        }else{
+            this.highScore = localStorage.getItem("highScore")
+        }
+
+        // Show high score (pull high score from local storage)
+        this.highScoreText = this.add.text(config.width / 2, config.height / 2, "High Score: " + this.highScore, {font: "40px Arial", fill: '#FFFF00'}).setOrigin(0.5);
+        
     }
 
     update() {
