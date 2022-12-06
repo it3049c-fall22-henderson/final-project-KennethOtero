@@ -56,8 +56,23 @@ class Scene1  extends Phaser.Scene {
             frameHeight: 16
         });
 
-        // Load the food
+        // Load the different food assets
         this.load.spritesheet("snakeFood", "assets/Apple.png", {
+            frameWidth: 16,
+            frameHeight: 16
+        });
+
+        this.load.spritesheet("Banana", "assets/Banana.png", {
+            frameWidth: 16,
+            frameHeight: 16
+        });
+
+        this.load.spritesheet("Egg", "assets/Egg.png", {
+            frameWidth: 16,
+            frameHeight: 16
+        });
+
+        this.load.spritesheet("Grape", "assets/Grape.png", {
             frameWidth: 16,
             frameHeight: 16
         });
