@@ -167,6 +167,8 @@ class Scene1  extends Phaser.Scene {
      */
     hit() {
 
+        this.speed -= 0.5
+
         // Increment the score and update it on the screen
         this.score += this.currentFoodPointValue
         this.scoreText.setText("SCORE: " + this.score);
