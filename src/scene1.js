@@ -57,10 +57,26 @@ class Scene1  extends Phaser.Scene {
         });
 
         // Load the food
-        this.load.spritesheet("snakeFood", "assets/Apple.png", {
+        this.load.spritesheet("apple", "assets/Apple.png", {
             frameWidth: 16,
             frameHeight: 16
         });
+
+        this.load.spritesheet("banana", "assets/banana.png", {
+            frameWidth: 16,
+            frameHeight: 16
+        });    
+
+        this.load.spritesheet("egg", "assets/Egg.png", {
+            frameWidth: 16,
+            frameHeight: 16
+        });  
+
+        this.load.spritesheet("grape", "assets/Grape.png", {
+            frameWidth: 16,
+            frameHeight: 16
+        });  
+    
     }
 
     /**
@@ -95,7 +111,10 @@ class Scene1  extends Phaser.Scene {
         });
 
         // Place the food at the center of the screen
-        let snakeFood = this.snakeFood = this.physics.add.sprite(config.width / 2, config.height / 2, "snakeFood");
+        this.currentFoodPointValue = 4
+        let snakeFood = this.snakeFood = this.physics.add.sprite(config.width / 2, config.height / 2, "apple");
+        this.foodTextures = ["apple", "banana", 'grape', 'egg']
+
 
         // Set collision on worldbounds so that the player/food does not exit the screen
         snakeFood.setCollideWorldBounds(true);
@@ -147,13 +166,15 @@ class Scene1  extends Phaser.Scene {
      * hit() - Score when the snake collides with its food.
      */
     hit() {
+
+        // Increment the score and update it on the screen
+        this.score += this.currentFoodPointValue
+        this.scoreText.setText("SCORE: " + this.score);
+
+        this.setRandomFoodTexture()
         // Change the position of the food to a random location
         this.snakeFood.x = Phaser.Math.Between(100, 600);
         this.snakeFood.y = Phaser.Math.Between(100, 300);
-
-        // Increment the score and update it on the screen
-        this.score++;
-        this.scoreText.setText("SCORE: " + this.score);
 
         //get previous ending angle
         var addAngle = this.snakeGroup.getLast(true).angle;
@@ -233,6 +254,26 @@ class Scene1  extends Phaser.Scene {
         });
         //adds tail to last piece
         this.snakeGroup.getLast(true).setTexture("snakeTail");
+    }
+
+    setRandomFoodTexture(){
+        let newFood = this.foodTextures[Math.floor(Math.random() * this.foodTextures.length)]
+
+        switch(newFood){
+            case("apple"):
+                this.currentFoodPointValue = 4
+                break;
+            case("banana"):
+                this.currentFoodPointValue = 3;
+                break;
+            case("grape"):
+                this.currentFoodPointValue = 2;
+                break;
+            case("egg"):
+                this.currentFoodPointValue = 1;
+                break;
+        }
+        this.snakeFood.setTexture(newFood);
     }
 
     /***
