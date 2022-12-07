@@ -137,6 +137,22 @@ class Scene1  extends Phaser.Scene {
         //Generate a weather event every 20 seconds
         this.time.addEvent({ delay: 15000, callback: this.generateWeatherEvent, callbackScope: this, loop: true });
 
+        //Generateing Sound
+        this.nomSound = this.sound.add("audio_nom");
+
+        this.nomSound = this.sound.add("audio_nom");
+        this.music = this.sound.add("music");
+
+        var musicConfig = {
+            mute: false,
+            volume: 6,
+            rate: 1,
+            detune: 0.5,
+            seek: 0,
+            loop: true,
+            delay: 0
+        }
+        this.music.play(musicConfig);
 
     }
 
@@ -181,24 +197,9 @@ class Scene1  extends Phaser.Scene {
                 blendMode: 'NORMAL'
              });
 
-             this.nomSound = this.sound.add("audio_nom");
-            this.music = this.sound.add("music");
-
-            var musicConfig = {
-                mute: false,
-                volume: 6,
-                rate: 1,
-                detune: 0.5,
-                seek: 0,
-                loop: true,
-                delay: 0
-            }
-            this.music.play(musicConfig);
-            }
-
         }
      
-
+    }
 
     }
 
@@ -353,7 +354,7 @@ class Scene1  extends Phaser.Scene {
         this.snakeFood.setTexture(newFood);
     }
 
-    eatFood() {
+    snakeFood() {
         var nom = new Nom(this);
         this.nomSound.play();
     }
