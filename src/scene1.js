@@ -82,8 +82,8 @@ class Scene1  extends Phaser.Scene {
 
         //load audio sound
 
-        this.load.audio("audio_nom", ["assets/nom.mp3"]);
-        this.load.audio("music", ["assets/background.mp3"]);
+        this.load.audio("audio_nom", ["assets/nom.ogg", "assets/nom.mp3"]);
+        this.load.audio("music", ["assets/background.ogg", "assets/background.mp3"]);
 
     }
 
