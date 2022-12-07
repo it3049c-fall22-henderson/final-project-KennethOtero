@@ -104,3 +104,9 @@ const errorCallback = (error) => {
 
 // Use the geolocation API to get a user's location and weather and update the DOM accordingly
 navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+
+// Clear localStorage
+let btnClear = document.getElementById('btnClear');
+btnClear.addEventListener('click', () => {
+    localStorage.clear();
+});
