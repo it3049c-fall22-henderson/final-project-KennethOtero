@@ -80,6 +80,8 @@ class Scene1  extends Phaser.Scene {
         this.load.atlas('rain', 'assets/rain.png', 'assets/rain.json');
         this.load.atlas('snow', 'assets/snowflake.png', 'assets/snowflake.json');
 
+        //load audio sound
+
         this.load.audio("audio_nom", ["assets/nom.mp3"]);
         this.load.audio("music", ["assets/background.mp3"]);
 
