@@ -80,7 +80,9 @@ class Scene1  extends Phaser.Scene {
         this.load.atlas('rain', 'assets/rain.png', 'assets/rain.json');
         this.load.atlas('snow', 'assets/snowflake.png', 'assets/snowflake.json');
 
-    
+        this.load.audio("audio_nom", ["assets/nom.mp3"]);
+        this.load.audio("music", ["assets/background.mp3"]);
+
     }
 
     /**
@@ -177,6 +179,19 @@ class Scene1  extends Phaser.Scene {
                 blendMode: 'NORMAL'
              });
 
+             this.nomSound = this.sound.add("audio_nom");
+            this.music = this.sound.add("music");
+
+            var musicConfig = {
+                mute: false,
+                volume: 1,
+                rate: 1,
+                detune: 0.5,
+                seek: 0,
+                loop: true,
+                delay: 0
+            }
+            this.music.play(musicConfig);
             }
 
         }
@@ -334,6 +349,11 @@ class Scene1  extends Phaser.Scene {
                 break;
         }
         this.snakeFood.setTexture(newFood);
+    }
+
+    eatFood() {
+        var nom = new Nom(this);
+        this.nomSound.play();
     }
 
     /***
