@@ -152,7 +152,7 @@ class Scene1  extends Phaser.Scene {
             loop: true,
             delay: 0
         }
-        this.music.play(musicConfig);
+        music.play(musicConfig);
 
     }
 
