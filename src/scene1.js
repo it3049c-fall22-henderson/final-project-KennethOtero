@@ -229,6 +229,12 @@ class Scene1  extends Phaser.Scene {
             if (this.physics.overlap(this.snakeGroup, this.snakeFood)) {
                 this.hit();
             }
+            this.nom = this.sound.add('nom', {
+                volume: 0.7,
+                loop: false
+            })
+    
+            this.nom.play();
         }
     }
 
@@ -238,12 +244,6 @@ class Scene1  extends Phaser.Scene {
     hit() {
 
         this.speed -= .75
-        this.nom = this.sound.add('nom', {
-            volume: 0.7,
-            loop: false
-        })
-
-        this.nom.play();
 
         // Increment the score and update it on the screen
         this.score += this.currentFoodPointValue
