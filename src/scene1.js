@@ -148,7 +148,10 @@ class Scene1  extends Phaser.Scene {
 
         this.music.play()
 
-        this.nomSound = this.sound.add("nom");
+        this.nomSound = this.sound.add("nom", {
+            volume: 0.7,
+            loop: false
+        });
 }
 
     generateWeatherEvent(){
