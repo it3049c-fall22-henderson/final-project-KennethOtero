@@ -148,10 +148,6 @@ class Scene1  extends Phaser.Scene {
 
         this.music.play()
 
-        this.nomSound = this.sound.add('nom', {
-            volume: 0.7,
-            loop: false
-        });
 }
 
     generateWeatherEvent(){
@@ -232,7 +228,6 @@ class Scene1  extends Phaser.Scene {
             // Check if the snake has hit the food
             if (this.physics.overlap(this.snakeGroup, this.snakeFood)) {
                 this.hit();
-                this.nomSound.play();
             }
         }
     }
