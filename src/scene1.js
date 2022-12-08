@@ -239,9 +239,9 @@ class Scene1  extends Phaser.Scene {
      */
     hit() {
 
-        this.speed -= .75
+        this.speed -= .75;
         this.nomSnd.play();
-        
+
         // Increment the score and update it on the screen
         this.score += this.currentFoodPointValue
         this.scoreText.setText("SCORE: " + this.score);
