@@ -139,7 +139,7 @@ class Scene1  extends Phaser.Scene {
         //Generate a weather event every 20 seconds
         this.time.addEvent({ delay: 15000, callback: this.generateWeatherEvent, callbackScope: this, loop: true });
 
-        //Generating Sound
+        //Generating Sound for Background
         
         this.music = this.sound.add('background', {
             volume: 0.6,
@@ -237,7 +237,13 @@ class Scene1  extends Phaser.Scene {
      */
     hit() {
 
-        this.speed -= 1
+        this.speed -= .75
+        this.nom = this.sound.add('nom', {
+            volume: 0.7,
+            loop: false
+        })
+
+        this.nom.play();
 
         // Increment the score and update it on the screen
         this.score += this.currentFoodPointValue
@@ -347,12 +353,6 @@ class Scene1  extends Phaser.Scene {
         }
         this.snakeFood.setTexture(newFood);
     }
-
-    snakeFood() {
-        var nom = new Nom(this);
-        this.nomSound.play();
-    }
-
     /***
      * Navigates to the game over screen. A game should be over if the head of the snake exists the world, or collides with its body.
      */
