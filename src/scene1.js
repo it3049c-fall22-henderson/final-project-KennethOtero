@@ -83,10 +83,9 @@ class Scene1  extends Phaser.Scene {
 
         //load audio sound
 
-        this.load.audio('background',[
-            'assets/background.ogg',
-            'assets/background.mp3'
+        this.load.audio('background',[ 'assets/background.ogg', 'assets/background.mp3'
         ]);
+        this.load.audio('nom',['assets/nom.ogg', 'assets/nom.mp3']);
 
     }
 
@@ -143,13 +142,18 @@ class Scene1  extends Phaser.Scene {
         //Generating Sound
         
         this.music = this.sound.add('background', {
-            volume: 1,
+            volume: 0.6,
             loop: true
         })
 
         this.music.play()
 
-    }
+        nom = this.sound.add("nom", {loop: false});
+
+        this.physics.add.collider(this.snakeFood, function (snakeFood){
+            nom.play();
+        });
+}
 
     generateWeatherEvent(){
 
