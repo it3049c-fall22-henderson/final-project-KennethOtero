@@ -238,9 +238,8 @@ class Scene1  extends Phaser.Scene {
      * hit() - Score when the snake collides with its food.
      */
     hit() {
-
-        this.speed -= .75;
         this.nomSnd.play();
+        this.speed -= .75;
 
         // Increment the score and update it on the screen
         this.score += this.currentFoodPointValue
