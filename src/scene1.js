@@ -150,8 +150,9 @@ class Scene1  extends Phaser.Scene {
 
         nom = this.sound.add("nom", {loop: false});
 
-        this.physics.add.collider(this.snakeFood, function (snakeFood){
-            this.nom.play();
+        this.physics.add.collider(this.snakeHead, this.snakeFood, function (snakeHead, snakeFood){
+            nom.play();
+            snakeFood.destroy();
         });
 }
 
