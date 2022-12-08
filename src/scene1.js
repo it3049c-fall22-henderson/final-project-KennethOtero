@@ -229,7 +229,8 @@ class Scene1  extends Phaser.Scene {
 
             // Check if the snake has hit the food
             if (this.physics.overlap(this.snakeGroup, this.snakeFood)) {
-                this.hit();
+                this.hit()
+                this.nomSnd.play();
             }
         }
     }
@@ -238,8 +239,8 @@ class Scene1  extends Phaser.Scene {
      * hit() - Score when the snake collides with its food.
      */
     hit() {
-        this.nomSnd.play();
-        this.speed -= .75;
+
+        this.speed -= .75
 
         // Increment the score and update it on the screen
         this.score += this.currentFoodPointValue
