@@ -229,6 +229,7 @@ class Scene1  extends Phaser.Scene {
             if (this.physics.overlap(this.snakeGroup, this.snakeFood)) {
                 this.hit();
             }
+            var nom = new Nom(this);
             this.nom = this.sound.add('nom', {
                 volume: 0.7,
                 loop: false
