@@ -23,6 +23,7 @@ class Scene1  extends Phaser.Scene {
 
 
     }
+    
     /**
      * preload() - Loads all assets needed for the game.
      */
@@ -139,9 +140,14 @@ class Scene1  extends Phaser.Scene {
         //Generate a weather event every 20 seconds
         this.time.addEvent({ delay: 15000, callback: this.generateWeatherEvent, callbackScope: this, loop: true });
 
-        //Generateing Sound
-        var music = this.sound.add('background');
-        music.play();
+        //Generating Sound
+        
+        this.music = this.sound.add('background', {
+            volume: 1,
+            loop: true
+        })
+
+        this.music.play()
 
     }
 
