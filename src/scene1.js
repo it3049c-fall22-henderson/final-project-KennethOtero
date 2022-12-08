@@ -148,12 +148,7 @@ class Scene1  extends Phaser.Scene {
 
         this.music.play()
 
-        nom = this.sound.add("nom", {loop: false});
-
-        this.physics.add.collider(this.snakeHead, this.snakeFood, function (snakeHead, snakeFood){
-            nom.play();
-            snakeFood.destroy();
-        });
+        this.nomSound = this.sound.add("nom");
 }
 
     generateWeatherEvent(){
@@ -244,6 +239,7 @@ class Scene1  extends Phaser.Scene {
     hit() {
 
         this.speed -= 1
+        this.nomSound.play();
 
         // Increment the score and update it on the screen
         this.score += this.currentFoodPointValue
