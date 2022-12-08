@@ -140,6 +140,8 @@ class Scene1  extends Phaser.Scene {
         this.time.addEvent({ delay: 15000, callback: this.generateWeatherEvent, callbackScope: this, loop: true });
 
         //Generating Sound for Background
+
+        this.nomSnd = this.add.audio('nom');
         
         this.music = this.sound.add('background', {
             volume: 0.6,
@@ -228,13 +230,7 @@ class Scene1  extends Phaser.Scene {
             // Check if the snake has hit the food
             if (this.physics.overlap(this.snakeGroup, this.snakeFood)) {
                 this.hit();
-                this.nom = this.sound.add('nom', {
-                volume: 0.7,
-                loop: false
-            })
-        }
-    
-            this.nom.play();
+            }
         }
     }
 
@@ -244,7 +240,8 @@ class Scene1  extends Phaser.Scene {
     hit() {
 
         this.speed -= .75
-
+        this.nomSnd.play();
+        
         // Increment the score and update it on the screen
         this.score += this.currentFoodPointValue
         this.scoreText.setText("SCORE: " + this.score);
