@@ -86,6 +86,8 @@ class Scene1  extends Phaser.Scene {
         this.load.audio('background',[ 'assets/background.ogg', 'assets/background.mp3'
         ]);
         this.load.audio('nom',['assets/nom.ogg', 'assets/nom.mp3']);
+        this.load.audio('death',['assets/death.ogg', 'assets/death.mp3']);
+
 
     }
 
@@ -141,7 +143,8 @@ class Scene1  extends Phaser.Scene {
 
         //Generating Sound for Background
 
-        this.nomSnd = this.add.audio('nom');
+        this.nomSnd = this.sound.add('nom');
+        this.deathSnd = this.sound.add('death');
         
         this.music = this.sound.add('background', {
             volume: 0.6,
@@ -230,7 +233,6 @@ class Scene1  extends Phaser.Scene {
             // Check if the snake has hit the food
             if (this.physics.overlap(this.snakeGroup, this.snakeFood)) {
                 this.hit();
-                this.nomSnd.play();
             }
         }
     }
@@ -354,7 +356,9 @@ class Scene1  extends Phaser.Scene {
      * Navigates to the game over screen. A game should be over if the head of the snake exists the world, or collides with its body.
      */
     gameOver(){
-
+        if (!this.gameOver){
+            this.deathSnd.play();
+        }
         this.scene.start("GameOver", {"finalScore": this.score})
         
     }
