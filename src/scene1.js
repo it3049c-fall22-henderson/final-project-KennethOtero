@@ -241,6 +241,8 @@ class Scene1  extends Phaser.Scene {
      * hit() - Score when the snake collides with its food.
      */
     hit() {
+        // Play nom sound
+        this.nomSnd.play();
 
         this.speed -= .75
 
@@ -356,9 +358,13 @@ class Scene1  extends Phaser.Scene {
      * Navigates to the game over screen. A game should be over if the head of the snake exists the world, or collides with its body.
      */
     gameOver(){
-        if (!this.gameOver){
-            this.deathSnd.play();
-        }
+        // Stop background music (needed to prevent looping)
+        this.music.stop();
+
+        // Play death sound
+        this.deathSnd.play();
+        
+        // Head to the game over scene
         this.scene.start("GameOver", {"finalScore": this.score})
         
     }
