@@ -1,4 +1,4 @@
-# Assignment: ?
+# Assignment: Group 2 Final Project - 
 
 ## Checklist:
 - [ ] fill out the self evaluation and Reflection

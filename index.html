@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake</title>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+    <div class="title">
+        <h1 id="gameTitle">Snake</h1>
+        <p>Created By: <br> Isaiah Dicristoforo, Rachel Lindquist, Johnathan Juilfs, Gabby McClimans, and Kenneth Otero</p>
+    </div>
+    <div class="nameForm" id="nameForm">
+        <form action="" onsubmit="return validateForm()">
+            <p>Enter your name:</p>
+            <input type="text" id="name" placeholder="Your name">
+            <button id="submit">
+                Submit
+            </button>
+        </form>
+    </div>
+    <div class="game" id="game"></div>
+    <div class="resetStorage">
+        <button class="btnClear" id="btnClear">
+            Clear High Score
+        </button>
+    </div>
+
+    <!-- Scripts -->
+    <script src="src/phaser.js"></script>
+    <script src="src/scene1.js"></script>    
+    <script src="src/gameOver.js"></script>
+    <script src="src/index.js"></script>
+    <script src="src/game.js"></script>
+</body>
+</html>
