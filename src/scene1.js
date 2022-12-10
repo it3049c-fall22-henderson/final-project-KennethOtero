@@ -23,6 +23,7 @@ class Scene1  extends Phaser.Scene {
 
 
     }
+    
     /**
      * preload() - Loads all assets needed for the game.
      */
@@ -80,7 +81,14 @@ class Scene1  extends Phaser.Scene {
         this.load.atlas('rain', 'assets/rain.png', 'assets/rain.json');
         this.load.atlas('snow', 'assets/snowflake.png', 'assets/snowflake.json');
 
-    
+        //load audio sound
+
+        this.load.audio('background',[ 'assets/background.ogg', 'assets/background.mp3'
+        ]);
+        this.load.audio('nom',['assets/nom.ogg', 'assets/nom.mp3']);
+        this.load.audio('death',['assets/death.ogg', 'assets/death.mp3']);
+
+
     }
 
     /**
@@ -133,6 +141,17 @@ class Scene1  extends Phaser.Scene {
         //Generate a weather event every 20 seconds
         this.time.addEvent({ delay: 15000, callback: this.generateWeatherEvent, callbackScope: this, loop: true });
 
+        //Generating Sound for Background
+
+        this.nomSnd = this.sound.add('nom');
+        this.deathSnd = this.sound.add('death');
+        
+        this.music = this.sound.add('background', {
+            volume: 0.6,
+            loop: true
+        })
+
+        this.music.play()
 
     }
 
@@ -177,11 +196,9 @@ class Scene1  extends Phaser.Scene {
                 blendMode: 'NORMAL'
              });
 
-            }
-
         }
      
-
+    }
 
     }
 
@@ -224,8 +241,10 @@ class Scene1  extends Phaser.Scene {
      * hit() - Score when the snake collides with its food.
      */
     hit() {
+        // Play nom sound
+        this.nomSnd.play();
 
-        this.speed -= 1
+        this.speed -= .75
 
         // Increment the score and update it on the screen
         this.score += this.currentFoodPointValue
@@ -335,12 +354,17 @@ class Scene1  extends Phaser.Scene {
         }
         this.snakeFood.setTexture(newFood);
     }
-
     /***
      * Navigates to the game over screen. A game should be over if the head of the snake exists the world, or collides with its body.
      */
     gameOver(){
+        // Stop background music (needed to prevent looping)
+        this.music.stop();
 
+        // Play death sound
+        this.deathSnd.play();
+        
+        // Head to the game over scene
         this.scene.start("GameOver", {"finalScore": this.score})
         
     }
